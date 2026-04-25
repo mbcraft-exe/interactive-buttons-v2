@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "interactive-buttons-v2"
-version = "1.0.0"
+version = "1.0.1"
 description = "Keyboard-driven interactive button menus for Python terminal apps"
 readme = "README.md"
 license = { text = "MIT" }
