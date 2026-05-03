@@ -21,9 +21,9 @@ class ButtonKeyBind:
 
     def __post_init__(self):
         for key in self.b_keys:
-            if not (len(key) == 1 and key.isascii() and key.isalnum()):
+            if not (len(key) == 1 and key.isascii() and (key.isalnum() or key == ' ')):
                 raise KeyBindError(f"`{key}` is not a valid entry for keybinding."
-                                    "\nAccepted: A-Z, a-z, 0-9")
+                                    "\nAccepted: A-Z, a-z, 0-9, SPACE (' ')")
 
 class Button:
     """A selectable button with an optional key binding and custom style."""

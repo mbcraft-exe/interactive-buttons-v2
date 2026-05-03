@@ -3,12 +3,13 @@ from __future__ import annotations
 from typing import Any, Protocol, cast
 
 from ..button import Button
-from ..button_style import ButtonStyle
+from ..button_style import ButtonStyle, MultiSelectStyle
 
 
 class ButtonsKindHost(Protocol):
     _buttons: list[Button]
     _global_buttons_style: ButtonStyle
+    _multi_select: MultiSelectStyle | None
     _display_index: bool
     _index_begin: int
     _auto_erase: bool
@@ -30,15 +31,19 @@ class ButtonsKindHost(Protocol):
     def _build_button_style(
         self,
         label: str,
-        selected: bool = False,
+        highlighted: bool = False,
+        ticked: bool = False,
         index: int = 0,
         local_style: ButtonStyle | None = None,
     ) -> str: ...
+
+    def _button_visible_width(self, button: Button, index: int) -> int: ...
 
 
 _REQUIRED_HOST_MEMBERS = (
     "_buttons",
     "_global_buttons_style",
+    "_multi_select",
     "_display_index",
     "_index_begin",
     "_auto_erase",
@@ -49,6 +54,7 @@ _REQUIRED_HOST_MEMBERS = (
     "_read_key",
     "_try_int",
     "_build_button_style",
+    "_button_visible_width",
 )
 
 

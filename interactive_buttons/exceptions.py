@@ -29,3 +29,15 @@ class KeyBindError(Exception):
     - Both ``key_bind`` and ``display_index`` are active at the same time.
     - Two different buttons share the same bound key.
     """
+
+
+class MultiSelectError(Exception):
+    """Raised for invalid multi-selection configuration or usage.
+
+    Possible causes:
+
+    - [`max_selected_amount`][interactive_buttons.MultiSelectStyle.max_selected_amount]
+      is greater than the number of buttons.
+    - [`min_selected_amount`][interactive_buttons.MultiSelectStyle.min_selected_amount]
+      is greater than the number of buttons.
+    """

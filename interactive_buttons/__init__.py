@@ -2,7 +2,7 @@ __version__ = "1.0.1"
 
 from .button import Button, ButtonKeyBind
 from .component import Component
-from .button_style import ButtonStyle, Fore, Back
+from .button_style import ButtonStyle, MultiSelectStyle, Fore, Back
 from .button_styles_presets import (
     DEFAULT_STYLE,
     HACKER_STYLE,
@@ -17,7 +17,7 @@ from .button_styles_presets import (
     SUNSET_STYLE,
     GHOST_STYLE,
 )
-from .exceptions import EmulatedTerminalDetected, MoreButtonsThanIndexes, KeyBindError
+from .exceptions import EmulatedTerminalDetected, MoreButtonsThanIndexes, KeyBindError, MultiSelectError
 
 __all__ = [
     "__version__",
@@ -37,9 +37,11 @@ __all__ = [
     "ButtonKeyBind",
     "Component",
     "ButtonStyle",
+    "MultiSelectStyle",
     "Fore",
     "Back",
     "EmulatedTerminalDetected",
     "MoreButtonsThanIndexes",
-    "KeyBindError"
+    "KeyBindError",
+    "MultiSelectError",
 ]

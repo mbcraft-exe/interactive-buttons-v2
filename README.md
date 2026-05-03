@@ -24,7 +24,7 @@ Requires Python **3.10+** and two lightweight dependencies:
 ## Quick example
 
 ```python
-from interactive_buttons import Button, Component, ButtonStyle, HACKER_STYLE
+from interactive_buttons import Button, Component
 
 buttons = [
     Button(label="Continue", value="continue"),
@@ -34,13 +34,10 @@ buttons = [
 comp   = Component(buttons, global_buttons_style=ButtonStyle(**HACKER_STYLE))
 choice = comp.column_buttons()
 
-print(f"You chose: {choice}")
+# print(f"You chose: {choice}")
 ```
 
-```text
-> Continue      <- highlighted (selected)
-  Exit
-```
+![Default example](https://github.com/mbcraft-exe/interactive-buttons-v2/blob/main/images/matrix_style_buttons_column.png?raw=true)
 
 Use **up / down** to navigate and **Enter** to confirm.
 
@@ -68,12 +65,7 @@ comp   = Component(buttons)
 choice = comp.column_buttons()
 ```
 
-```text
-[New file]   <- highlighted
-[Open file]
-[Save]
-[Quit]
-```
+![Default example](https://github.com/mbcraft-exe/interactive-buttons-v2/blob/main/images/basic_column_buttons_example.png?raw=true)
 
 ### Linear (horizontal) layout
 
@@ -96,7 +88,7 @@ confirm = comp.linear_buttons()
 Buttons are arranged in a square grid. Navigate with all four arrow keys, confirm with **Enter**. The grid side length is `ceil(sqrt(len(buttons)))`.
 
 ```python
-from interactive_buttons import Button, Component, ButtonStyle, MATRIX_STYLE
+from interactive_buttons import Button, Component, ButtonStyle, SUNSET_STYLE
 
 buttons = [
     Button(label="Attack",  value="attack"),
@@ -110,15 +102,11 @@ buttons = [
     Button(label="Quit",    value="quit"),
 ]
 
-comp   = Component(buttons, global_buttons_style=ButtonStyle(**MATRIX_STYLE))
+comp   = Component(buttons, global_buttons_style=ButtonStyle(**SUNSET_STYLE))
 action = comp.matrix_buttons()
 ```
 
-```text
-[Attack]   [Magic]  [Item]
-[Defend]   [Flee]   [Status]
-[Options]  [Save]   [Quit]
-```
+![Default example](https://github.com/mbcraft-exe/interactive-buttons-v2/blob/main/images/sunset_style_buttons_matrix.png?raw=true)
 
 ---
 
@@ -128,6 +116,7 @@ action = comp.matrix_buttons()
 |-----------|------|---------|-------------|
 | `buttons` | `list[Button]` | - | Ordered list of buttons |
 | `global_buttons_style` | `ButtonStyle` | `DEFAULT_STYLE` | Style applied to buttons without a local override |
+| `multi_select` | `MultiSelectStyle \| None` | `None` | Enable multi-selection mode (see [Multi-select](#multi-select)) |
 | `display_index` | `bool` | `False` | Auto-prefix each button with a digit shortcut (`1`, `2`, …) |
 | `index_begin` | `int` | `1` | Starting digit when `display_index` is active |
 | `auto_erase` | `bool` | `False` | Erase the rendered buttons automatically after selection |
@@ -242,7 +231,7 @@ buttons = [
 
 comp    = Component(buttons)
 confirm = comp.linear_buttons()
-# Pressing "y" immediately returns True; pressing "n" immediately returns False.
+# Pressing "y" immediately returns True and pressing "n" immediately returns False.
 ```
 
 ### Case-sensitive keys
@@ -256,8 +245,52 @@ upper_bind = ButtonKeyBind(b_keys=["A"], case_sensitive=True)
 
 ### Accepted characters
 
-Each entry in `b_keys` must be a **single ASCII alphanumeric character** (`A-Z`, `a-z`, `0-9`). Anything else raises `KeyBindError` at construction time. Each key must also be unique across all buttons in the same `Component`.
+Each entry in `b_keys` must be a **single ASCII alphanumeric character** (`A-Z`, `a-z`, `0-9`) or a **space** (`' '`). Anything else raises `KeyBindError` at construction time. Each key must also be unique across all buttons in the same `Component`.
 
+---
+
+## Multi-select
+
+Pass a `MultiSelectStyle` to `Component` to let the user tick multiple buttons before confirming. `SPACE` (or a custom key) toggles the selection of the highlighted button and `Enter` confirms once the selection satisfies the configured bounds.
+
+```python
+from interactive_buttons import Button, Component, MultiSelectStyle
+
+toppings = [
+    Button(label="Cheese",    value="cheese"),
+    Button(label="Mushrooms", value="mushrooms"),
+    Button(label="Peppers",   value="peppers"),
+    Button(label="Olives",    value="olives"),
+]
+
+ms = MultiSelectStyle(
+    tick_on="[x] ",  # Default
+    tick_off="[ ] ",  # Default
+    min_selected_amount=1,
+    max_selected_amount=3,
+    display_error="Pick between 1 and 3 toppings.",
+)
+
+comp    = Component(toppings, multi_select=ms)
+choices = comp.column_buttons()   # returns the list of selected elements
+
+print(f"Chosen: {choices}")
+```
+
+![Default example](https://github.com/mbcraft-exe/interactive-buttons-v2/blob/main/images/basic_multiselect_buttons.png?raw=true)
+
+`column_buttons`, `linear_buttons`, and `matrix_buttons` all support multi-select. The return type changes from a single value to a `list[Any]`.
+
+| `MultiSelectStyle` parameter | Type | Default | Description |
+|------------------------------|------|---------|-------------|
+| `tick_on` | `str` | `"[x] "` | Prefix shown on a selected button |
+| `tick_off` | `str` | `"[ ] "` | Prefix shown on an unselected button |
+| `min_selected_amount` | `int` | `0` | Minimum ticked buttons before Enter is accepted |
+| `max_selected_amount` | `int` | `-1` | Maximum ticked buttons (`-1` = unlimited) |
+| `display_error` | `str \| None` | `None` | Message shown when the user tries to confirm an invalid selection |
+| `select_keys` | `list[str]` | `[SPACE]` | Keys that toggle the highlighted button's ticked state |
+
+---
 
 ## Documentation
 
