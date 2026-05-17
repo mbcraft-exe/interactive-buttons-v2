@@ -167,7 +167,7 @@ class MatrixButtons:
                                         return selected_value
                                 else:
                                     print_matrix(x, y)
-                        except AttributeError:
+                        except (AttributeError, TypeError):
                             continue
 
         if host._auto_erase:

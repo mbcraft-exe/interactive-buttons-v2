@@ -143,7 +143,7 @@ class ColumnButtons:
                                     return selected_value
                             else:
                                 print_column(y)
-                    except AttributeError:
+                    except (AttributeError, TypeError):
                         continue
 
         if host._auto_erase:

@@ -146,7 +146,7 @@ class LinearButtons:
                                     return selected_value
                             else:
                                 print_linear(x)
-                    except AttributeError:
+                    except (AttributeError, TypeError):
                         continue
 
         if host._auto_erase:
